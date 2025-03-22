@@ -18,6 +18,14 @@ Route::get('/ayam', function () {
     echo'welcome';
 });
 
+
+Route::get('/lebaran', function () {
+    echo'welcome';
+});
+
+Route::get('/puasa', function () {
+    echo'welcome';
+});
 Route::get('/kambing', function () {
     echo'welcome';
 });
