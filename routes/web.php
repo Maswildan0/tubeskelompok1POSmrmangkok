@@ -14,3 +14,7 @@ Route::get('/hello', function () {
     echo'welcome';
 });
 
+Route::get('/ayam', function () {
+    echo'welcome';
+});
+
