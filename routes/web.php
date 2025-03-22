@@ -14,3 +14,7 @@ Route::get('/hello', function () {
     echo'welcome';
 });
 
+Route::get('/kambing', function () {
+    echo'welcome';
+});
+
