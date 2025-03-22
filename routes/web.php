@@ -18,3 +18,7 @@ Route::get('/ayam', function () {
     echo'welcome';
 });
 
+Route::get('/kambing', function () {
+    echo'welcome';
+});
+
