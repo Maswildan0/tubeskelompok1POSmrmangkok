@@ -11,15 +11,39 @@ Route::get('/hi', function () {
 });
 
 Route::get('/hello', function () {
-    echo'welcome';
+    echo'halooo';
 });
 
 Route::get('/ayam', function () {
     echo'welcome';
 });
 
+
 Route::get('/saya', function () {
     echo'welcome';
 });
 
 
+
+Route::get('/lebaran', function () {
+    echo'welcome';
+});
+
+Route::get('/puasa', function () {
+    echo'welcome';
+});
+Route::get('/kambing', function () {
+    echo'welcome';
+});
+Route::get('/kelinci', function () {
+    echo'welcome';
+});
+
+
+Route::get('/sapi', function () {
+    echo'welcome';
+});
+
+Route::get('/angsa', function () {
+    echo'welcome';
+});
