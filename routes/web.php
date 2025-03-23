@@ -18,7 +18,7 @@ Route::get('/ayam', function () {
     echo'welcome';
 });
 
-Route::get('/lebaran', function () {
+Route::get('/saya', function () {
     echo'welcome';
 });
 
