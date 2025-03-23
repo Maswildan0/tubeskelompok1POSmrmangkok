@@ -34,4 +34,8 @@ Route::get('/panda', function () {
     echo'welcome';
 });
 
+Route::get('/simpanse', function () {
+    echo'welcome';
+});
+
 
