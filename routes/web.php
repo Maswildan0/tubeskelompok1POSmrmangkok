@@ -18,3 +18,7 @@ Route::get('/kambing', function () {
     echo'welcome';
 });
 
+Route::get('/sapi', function () {
+    echo'welcome';
+});
+
