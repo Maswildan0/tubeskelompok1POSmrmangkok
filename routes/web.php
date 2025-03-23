@@ -22,7 +22,4 @@ Route::get('/lebaran', function () {
     echo'welcome';
 });
 
-Route::get('/puasa', function () {
-    echo'welcome';
-});
 
