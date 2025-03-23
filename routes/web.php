@@ -29,4 +29,7 @@ Route::get('/puasa', function () {
 Route::get('/kambing', function () {
     echo'welcome';
 });
+Route::get('/kelinci', function () {
+    echo'welcome';
+});
 
