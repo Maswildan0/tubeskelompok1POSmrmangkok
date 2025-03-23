@@ -7,7 +7,7 @@ Route::get('/', function () {
 });
 
 Route::get('/hi', function () {
-    echo'welcome';
+    echo'wassup';
 });
 
 Route::get('/hello', function () {
