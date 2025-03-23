@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('wassup');
 });
 
 Route::get('/hi', function () {
@@ -36,4 +36,13 @@ Route::get('/kelinci', function () {
 Route::get('/sapi', function () {
     echo'welcome';
 });
+
+Route::get('/panda', function () {
+    echo'welcome';
+});
+
+Route::get('/simpanse', function () {
+    echo'welcome';
+});
+
 
