@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('coamrmangkok', function (Blueprint $table) {
+        Schema::create('coa', function (Blueprint $table) {
             $table->id();
-            $table->header_akun();
-            $table->kode_akun();
-            $table->nama_akun();
+            $table->string('kepala_akun');
+            $table->string('kode_akun')->unique();
+            $table->string('nama_akun');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('coamrmangkok');
+        Schema::dropIfExists('coa');
     }
 };
