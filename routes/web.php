@@ -42,7 +42,7 @@ Route::get('/panda', function () {
 });
 
 Route::get('/simpanse', function () {
-    echo'anjay';
+    echo'wanjay';
 });
 
 
