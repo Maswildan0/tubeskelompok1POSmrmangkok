@@ -37,3 +37,6 @@ Route::get('/sapi', function () {
     echo'welcome';
 });
 
+Route::get('/angsa', function () {
+    echo'welcome';
+});
