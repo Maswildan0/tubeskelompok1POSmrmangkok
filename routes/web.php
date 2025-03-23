@@ -30,7 +30,7 @@ Route::get('/kambing', function () {
     echo'welcome';
 });
 
-Route::get('/kucing', function () {
+Route::get('/panda', function () {
     echo'welcome';
 });
 
