@@ -11,7 +11,7 @@ Route::get('/hi', function () {
 });
 
 Route::get('/hello', function () {
-    echo'halooo';
+    echo'haloo';
 });
 
 Route::get('/ayam', function () {
