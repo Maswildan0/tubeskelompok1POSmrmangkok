@@ -41,7 +41,7 @@ Route::get('/panda', function () {
     echo'hallo';
 });
 
-Route::get('/simpanse', function () {
+Route::get('/yppie', function () {
     echo'arigathanks gozaimuch';
 });
 
