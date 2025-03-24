@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pembayaran extends Model
+class coa extends Model
 {
-    /** @use HasFactory<\Database\Factories\PembayaranFactory> */
     use HasFactory;
+    protected $table = 'coa'; // Nama tabel eksplisit
+
+    protected $guarded = [];
 }

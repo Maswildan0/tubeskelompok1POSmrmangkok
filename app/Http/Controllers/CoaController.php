@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pembayaran;
-use App\Http\Requests\StorePembayaranRequest;
-use App\Http\Requests\UpdatePembayaranRequest;
+use App\Models\coa;
+use App\Http\Requests\StorecoaRequest;
+use App\Http\Requests\UpdatecoaRequest;
 
-class PembayaranController extends Controller
+class CoaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +27,7 @@ class PembayaranController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePembayaranRequest $request)
+    public function store(StorecoaRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class PembayaranController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pembayaran $pembayaran)
+    public function show(coa $coa)
     {
         //
     }
@@ -43,7 +43,7 @@ class PembayaranController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pembayaran $pembayaran)
+    public function edit(coa $coa)
     {
         //
     }
@@ -51,7 +51,7 @@ class PembayaranController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePembayaranRequest $request, Pembayaran $pembayaran)
+    public function update(UpdatecoaRequest $request, coa $coa)
     {
         //
     }
@@ -59,7 +59,7 @@ class PembayaranController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pembayaran $pembayaran)
+    public function destroy(coa $coa)
     {
         //
     }

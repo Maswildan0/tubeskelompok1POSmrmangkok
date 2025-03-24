@@ -34,7 +34,6 @@ class PelangganResource extends Resource
                 TextInput::make('id_pelanggan')
                 ->label('Id Pelanggan')
                 ->default(fn () => Pelanggan::getIdPelanggan()) // Ambil default dari method getIdPelanggan
-                ->label('id_pelanggan')
                 ->required()
                 ->readonly() // Membuat field menjadi read-only
                 ,
