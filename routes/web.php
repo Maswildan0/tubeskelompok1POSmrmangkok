@@ -38,11 +38,11 @@ Route::get('/sapi', function () {
 });
 
 Route::get('/panda', function () {
-    echo'welcome';
+    echo'hallo';
 });
 
 Route::get('/simpanse', function () {
-    echo'hai hai';
+    echo'arigathanks gozaimuch';
 });
 
 
