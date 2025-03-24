@@ -49,7 +49,7 @@ class MenuResource extends Resource
 
                 Select::make('id_kategori')
                 ->label('Pilih Kategori')
-                ->options(['Makanan', 'Minuman','Sambal/Saus', 'Topping']) // Ambil data pelanggan
+                ->options(fn () => \App\Models\Kategori::pluck('id_kategori')) // Ambil data pelanggan
                 ->searchable() // Bisa dicari
                 ->preload() // Load semua data untuk performa lebih baik
                 ->required()
