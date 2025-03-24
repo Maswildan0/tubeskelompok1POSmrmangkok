@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('id_menu');
             $table->string('id_kategori');
-            $table->enum('kategori',['Makanan','Minuman','Sambal','Topping']);
             $table->string('nama');
             $table->integer('harga');
             $table->string('gambar');

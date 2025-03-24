@@ -47,23 +47,13 @@ class MenuResource extends Resource
                     ->readonly() // Membuat field menjadi read-only
                 ,
 
-                TextInput::make('id_kategori')
-                ->label('ID Kategori')
+                Select::make('id_kategori')
+                ->label('Pilih Kategori')
+                ->options(fn () => \App\Models\Kategori::pluck('id_kategori')) // Ambil data pelanggan
+                ->searchable() // Bisa dicari
+                ->preload() // Load semua data untuk performa lebih baik
                 ->required()
-                ->placeholder('Masukkan ID Kategori')
 
-                ,
-
-                Radio::make('kategori')
-                ->label('Kategori')
-                ->options([
-                    'Makanan' => 'Makanan',
-                    'Minuman' => 'Minuman',
-                    'Sambal' => 'Sambal',
-                    'Topping' => 'Topping',
-                ])
-                ->required()
-                
                 ,
 
                 TextInput::make('nama')
@@ -111,9 +101,6 @@ class MenuResource extends Resource
                 TextColumn::make('id_kategori')
                     ->searchable()
                     ->label('ID Kategori'),
-
-                TextColumn::make('kategori')
-                    ->label('Kategori'),
                 
                 TextColumn::make('nama')
                     ->label('Nama'),
