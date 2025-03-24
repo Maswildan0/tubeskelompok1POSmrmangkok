@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
 
 class Kategori extends Model
 {
+    /** @use HasFactory<\Database\Factories\KategoriFactory> */
     use HasFactory;
-
     protected $table = 'kategori'; // Nama tabel eksplisit
 
     protected $guarded = [];
@@ -33,8 +32,4 @@ class Kategori extends Model
         return $noakhir;
 
     }
-    public function getJenisKategoriAttribute($value)
-{
-    return $value;
-}
 }

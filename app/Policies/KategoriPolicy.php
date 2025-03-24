@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Kategori;
 use App\Models\User;
-use App\Models\coa;
 use Illuminate\Auth\Access\Response;
 
-class CoaPolicy
+class KategoriPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class CoaPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, coa $coa): bool
+    public function view(User $user, Kategori $kategori): bool
     {
         return true;
     }
@@ -35,7 +35,7 @@ class CoaPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, coa $coa): bool
+    public function update(User $user, Kategori $kategori): bool
     {
         return true;
     }
@@ -43,7 +43,7 @@ class CoaPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, coa $coa): bool
+    public function delete(User $user, Kategori $kategori): bool
     {
         return true;
     }
@@ -51,7 +51,7 @@ class CoaPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, coa $coa): bool
+    public function restore(User $user, Kategori $kategori): bool
     {
         return true;
     }
@@ -59,7 +59,7 @@ class CoaPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, coa $coa): bool
+    public function forceDelete(User $user, Kategori $kategori): bool
     {
         return true;
     }
