@@ -19,6 +19,12 @@ Route::get('/ayam', function () {
 });
 
 
+Route::get('/saya', function () {
+    echo'welcome';
+});
+
+
+
 Route::get('/lebaran', function () {
     echo'welcome';
 });
@@ -33,9 +39,11 @@ Route::get('/kelinci', function () {
     echo'welcome';
 });
 
+
 Route::get('/sapi', function () {
     echo'welcome';
 });
+
 
 Route::get('/panda', function () {
     echo'hallo';
@@ -45,4 +53,9 @@ Route::get('/yppie', function () {
     echo'arigathanks gozaimuch';
 });
 
+
+
+Route::get('/angsa', function () {
+    echo'welcome';
+});
 
