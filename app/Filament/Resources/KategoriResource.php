@@ -16,6 +16,7 @@ use Filament\Forms\Components\Radio;
 
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Support\Enums\IconPosition;
 
 use App\Filament\Resources\KategoriResource\Pages;
 use App\Filament\Resources\KategoriResource\RelationManagers;
@@ -71,9 +72,23 @@ class KategoriResource extends Resource
                 ,
                 TextColumn::make('nama_Kategori')
                     -> label('nama Kategori')
+                        ->color(fn ($state) => match ($state) {
+                            'Makanan' => 'success',
+                            'Minuman' => 'primary',
+                            'Sambal' => 'danger',
+                            'Topping' => 'info',
+                        })
+                ,
+                TextColumn::make('menus_count')
+                    ->label('Jumlah Produk')
+                    ->counts('menus')
+                    ->sortable()
                 ,
                 TextColumn::make('deskripsi')
                     -> label('Deskripsi kategori')
+                    -> tooltip(fn ($state) => $state)
+                
+
             ])
             ->filters([
                 //

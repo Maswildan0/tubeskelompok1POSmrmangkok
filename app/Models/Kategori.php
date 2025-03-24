@@ -32,4 +32,8 @@ class Kategori extends Model
         return $noakhir;
 
     }
+    public function menus()
+{
+    return $this->hasMany(Menu::class, 'id_kategori', 'id_kategori');
+}
 }

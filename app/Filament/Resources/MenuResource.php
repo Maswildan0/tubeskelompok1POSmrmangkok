@@ -114,7 +114,7 @@ class MenuResource extends Resource
 
                 ImageColumn::make('gambar')
                 ->label('Gambar')
-                ->size(100), 
+                ->size(50), 
 
                 TextColumn::make('deskripsi')
                 ->label('Deskripsi')
