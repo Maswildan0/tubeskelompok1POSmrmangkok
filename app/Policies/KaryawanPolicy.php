@@ -12,6 +12,7 @@ class KaryawanPolicy
      */
     public function viewAny(User $user): bool
     {
+
         return true;
     }
 
@@ -20,6 +21,7 @@ class KaryawanPolicy
      */
     public function view(User $user, Karyawan $karyawan): bool
     {
+
         return true;
     }
 
@@ -28,6 +30,7 @@ class KaryawanPolicy
      */
     public function create(User $user): bool
     {
+
         return true;
     }
 
@@ -36,6 +39,7 @@ class KaryawanPolicy
      */
     public function update(User $user, Karyawan $karyawan): bool
     {
+
         return true;
     }
 
@@ -44,6 +48,7 @@ class KaryawanPolicy
      */
     public function delete(User $user, Karyawan $karyawan): bool
     {
+
         return true;
     }
 
@@ -52,6 +57,7 @@ class KaryawanPolicy
      */
     public function restore(User $user, Karyawan $karyawan): bool
     {
+
         return true;
     }
 
@@ -60,6 +66,7 @@ class KaryawanPolicy
      */
     public function forceDelete(User $user, Karyawan $karyawan): bool
     {
+
         return true;
     }
 }
