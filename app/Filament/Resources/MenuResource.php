@@ -49,7 +49,7 @@ class MenuResource extends Resource
 
                 Select::make('id_kategori')
                 ->label('Pilih Kategori')
-                ->options(fn () => \App\Models\Kategori::pluck('id_kategori')) // Ambil data pelanggan
+                ->options(fn () => \App\Models\Kategori::pluck('nama_Kategori','id_kategori')) // Ambil data pelanggan
                 ->searchable() // Bisa dicari
                 ->preload() // Load semua data untuk performa lebih baik
                 ->required()
@@ -98,7 +98,7 @@ class MenuResource extends Resource
                     ->searchable()
                     -> label('ID Menu'),
 
-                TextColumn::make('id_kategori')
+                TextColumn::make('kategori.nama_Kategori')
                     ->searchable()
                     ->label('ID Kategori'),
                 
@@ -131,7 +131,7 @@ class MenuResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

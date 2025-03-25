@@ -57,3 +57,6 @@ Route::get('/angsa', function () {
     echo'welcome';
 });
 
+
+Route::model('karyawan', \App\Models\Karyawan::class);
+

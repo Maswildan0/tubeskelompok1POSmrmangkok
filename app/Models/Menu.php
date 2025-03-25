@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 
 class Menu extends Model
 {
@@ -39,4 +41,11 @@ class Menu extends Model
         // Hapus koma (,) dari nilai sebelum menyimpannya ke database
         $this->attributes['harga'] = str_replace('.', '', $value);
     }
+
+
+    public function kategori(): BelongsTo
+    {
+        return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
+    }
+
 }

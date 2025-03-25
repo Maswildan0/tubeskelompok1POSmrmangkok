@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+namespace App\Filament\Resources;
+
 use App\Filament\Resources\KaryawanResource\Pages;
 use App\Models\Karyawan;
 use Filament\Forms;
@@ -9,8 +11,13 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
 
 class KaryawanResource extends Resource
 {
@@ -27,12 +34,15 @@ class KaryawanResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('id_karyawan')
                     ->label('ID Karyawan')
-                    ->required()
-                    ->maxLength(255),
+                    ->disabled()  // Membuat field ini tidak bisa diubah
+                    ->default(function () {
+                        return 'KAR' . str_pad(Karyawan::max('id_karyawan') + 1, 5, '0', STR_PAD_LEFT); // ID otomatis
+                    }),
                 Forms\Components\TextInput::make('nama_karyawan')
                     ->label('Nama Karyawan')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->placeholder('Masukkan Nama Karyawan'),  // Menambahkan placeholder
                 Forms\Components\Select::make('jenis_kelamin')
                     ->label('Jenis Kelamin')
                     ->options([
@@ -40,19 +50,22 @@ class KaryawanResource extends Resource
                         'Perempuan' => 'Perempuan',
                     ])
                     ->required(),
-                Forms\Components\TextInput::make('alamat')
+                Forms\Components\TextArea::make('alamat')
                     ->label('Alamat')
                     ->required()
-                    ->maxLength(500),
+                    ->maxLength(500)
+                    ->placeholder('Masukkan Alamat'),  // Menambahkan placeholder
                 Forms\Components\TextInput::make('nomor_telepon')
                     ->label('Nomor Telepon')
                     ->required()
-                    ->maxLength(15),
+                    ->maxLength(15)
+                    ->placeholder('Masukkan No Telepon'),  // Menambahkan placeholder
                 Forms\Components\TextInput::make('email')
                     ->label('Email')
                     ->required()
                     ->email()
-                    ->unique(Karyawan::class, 'email'),
+                    ->unique(Karyawan::class, 'email')
+                    ->placeholder('Masukkan Email'),  // Menambahkan placeholder
             ]);
     }
 
@@ -69,16 +82,21 @@ class KaryawanResource extends Resource
                 Tables\Columns\TextColumn::make('email')->label('Email'),
                 Tables\Columns\TextColumn::make('nomor_telepon')->label('Nomor Telepon'),
             ])
-            ->filters([
-                // Tambahkan filter jika diperlukan
-            ])
             ->actions([
                 EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    DeleteAction::make(),
-                ]),
+                BulkAction::make('delete')  // Definisikan bulk action untuk delete
+                    ->label('Hapus')  // Label untuk action
+                    ->action(function ($records) {
+                        // Periksa apakah record valid dan bukan null sebelum dihapus
+                        foreach ($records as $record) {
+                            if ($record instanceof Karyawan) {
+                                $record->delete();  // Hapus record jika valid
+                            }
+                        }
+                    })
+                    ->requiresConfirmation(),  // Menambahkan konfirmasi
             ]);
     }
 

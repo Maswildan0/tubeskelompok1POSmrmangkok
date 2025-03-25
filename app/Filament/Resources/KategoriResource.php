@@ -1,20 +1,22 @@
 <?php
 
 namespace App\Filament\Resources;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Grid;
+// use Filament\Forms\Components\InputMask;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload; //untuk tipe file
+
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Radio;
 
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Support\Enums\IconPosition;
 
 use App\Filament\Resources\KategoriResource\Pages;
 use App\Filament\Resources\KategoriResource\RelationManagers;
@@ -43,17 +45,20 @@ class KategoriResource extends Resource
                     ->required()
                     ->readonly() 
                 ,
-                TextInput::make('Jenis_kategori')
-                    ->label('Jenis Kategori')
+
+                TextInput::make('nama_Kategori')
+                    ->label('nama Kategori')
                     ->required()
-                    ->placeholder('Masukkan Jenis Kategori')
+                    ->placeholder('Masukkan nama Kategori')
                 ,
+
                 Textarea::make('deskripsi')
                     ->label('Deskripsi kategori')
                     ->maxLength(500)
                     ->required()
                     ->placeholder('Masukkan Deskripsi Kategori')
                 ,
+                
             ]);
     }
 
@@ -65,15 +70,25 @@ class KategoriResource extends Resource
                     ->searchable()
                     -> label('ID Kategori')
                 ,
-                TextColumn::make('Jenis_kategori')
-                    ->searchable()
-                    -> label('Jenis Kategori')
+                TextColumn::make('nama_Kategori')
+                    -> label('nama Kategori')
+                        ->color(fn ($state) => match ($state) {
+                            'Makanan' => 'success',
+                            'Minuman' => 'primary',
+                            'Sambal' => 'danger',
+                            'Topping' => 'info',
+                        })
+                ,
+                TextColumn::make('menus_count')
+                    ->label('Jumlah Produk')
+                    ->counts('menus')
+                    ->sortable()
                 ,
                 TextColumn::make('deskripsi')
-                    ->searchable()
                     -> label('Deskripsi kategori')
-                ,
+                    -> tooltip(fn ($state) => $state)
                 
+
             ])
             ->filters([
                 //
@@ -82,6 +97,7 @@ class KategoriResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

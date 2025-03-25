@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Karyawan;
-use Illuminate\Auth\Access\Response;
 
 class KaryawanPolicy
 {
@@ -13,7 +12,9 @@ class KaryawanPolicy
      */
     public function viewAny(User $user): bool
     {
+HEAD
         // Hanya admin yang dapat melihat semua karyawan
+
         return true;
     }
 
@@ -22,7 +23,9 @@ class KaryawanPolicy
      */
     public function view(User $user, Karyawan $karyawan): bool
     {
+ HEAD
         // Pengguna dapat melihat data karyawan miliknya atau admin dapat melihat semua data karyawan
+=======
         return true;
     }
 
@@ -31,7 +34,9 @@ class KaryawanPolicy
      */
     public function create(User $user): bool
     {
+ HEAD
         // Hanya admin yang dapat membuat karyawan
+=======
         return true;
     }
 
@@ -40,7 +45,10 @@ class KaryawanPolicy
      */
     public function update(User $user, Karyawan $karyawan): bool
     {
+ HEAD
         // Hanya admin yang dapat memperbarui semua data karyawan atau pengguna dapat memperbarui data karyawan miliknya
+=======
+
         return true;
     }
 
@@ -49,7 +57,10 @@ class KaryawanPolicy
      */
     public function delete(User $user, Karyawan $karyawan): bool
     {
+ HEAD
         // Hanya admin yang dapat menghapus semua data karyawan atau pengguna dapat menghapus data karyawan miliknya
+=======
+
         return true;
     }
 
@@ -58,7 +69,9 @@ class KaryawanPolicy
      */
     public function restore(User $user, Karyawan $karyawan): bool
     {
+ HEAD
         // Hanya admin yang dapat mengembalikan data karyawan
+=======
         return true;
     }
 
@@ -67,7 +80,11 @@ class KaryawanPolicy
      */
     public function forceDelete(User $user, Karyawan $karyawan): bool
     {
+ HEAD
         // Hanya admin yang dapat menghapus data karyawan secara permanen
+=======
+
+
         return true;
     }
 }
