@@ -21,7 +21,7 @@ use Filament\Tables\Columns\TextColumn;
 class KaryawanResource extends Resource
 {
     protected static ?string $model = Karyawan::class;
-ss
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
