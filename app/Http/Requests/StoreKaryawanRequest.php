@@ -11,7 +11,7 @@ class StoreKaryawanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Ganti dengan true agar request ini diizinkan
+        return false;
     }
 
     /**
@@ -22,12 +22,7 @@ class StoreKaryawanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_karyawan' => 'required|unique:karyawans,id_karyawan|max:10', // Validasi id karyawan
-            'nama_karyawan' => 'required|string|max:255', // Validasi nama karyawan
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan', // Validasi jenis kelamin
-            'alamat' => 'required|string|max:255', // Validasi alamat
-            'nomor_telepon' => 'required|unique:karyawans,nomor_telepon|regex:/^(\+62|62|0)8[1-9][0-9]{6,9}$/', // Validasi nomor telepon
-            'email' => 'required|email|unique:karyawans,email', // Validasi email
+            //
         ];
     }
 }

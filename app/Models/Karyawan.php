@@ -4,28 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Karyawan extends Model
 {
-    /** @use HasFactory<\Database\Factories\KaryawanFactory> */
     use HasFactory;
 
-    // Menentukan nama tabel jika berbeda dari konvensi plural
-    protected $table = 'karyawans';
+    protected $table = 'karyawans'; // Nama tabel eksplisit
 
-    // Menentukan atribut yang dapat diisi secara massal
-    protected $fillable = [
-        'id_karyawan',
-        'nama_karyawan',
-        'jenis_kelamin',
-        'no_telepon',
-        'email',
-        'alamat',
-    ];
+    protected $guarded = []; // Menjaga agar tidak ada atribut yang dibatasi untuk mass assignment
 
-    // Jika id_karyawan bukan auto-increment dan ingin diatur manual, Anda bisa tentukan
-    public $incrementing = false; // Menandakan id_karyawan tidak auto-increment
+    public static function getIdKaryawan()
+    {
+        // Query untuk mendapatkan ID Karyawan terakhir
+        $sql = "SELECT IFNULL(MAX(id_karyawan), 'KA000') as id_karyawan FROM karyawans";
+        $idkaryawan = DB::select($sql);
 
-    // Tentukan tipe data untuk id_karyawan (misalnya jika ID adalah string)
-    protected $keyType = 'string';
+        // Mengambil hasil ID Karyawan
+        foreach ($idkaryawan as $karyawan) {
+            $id = $karyawan->id_karyawan;
+        }
+
+        // Mengambil substring tiga digit terakhir dari ID (KA-000) dan menambahkan 1
+        $nomor1 = substr($id, -3); 
+        $nomor2 = $nomor1 + 1; // Menambah angka 1 untuk ID berikutnya
+        $nomakhir = 'KA' . str_pad($nomor2, 3, "0", STR_PAD_LEFT); // Menyusun ID Karyawan baru (KA-001)
+
+        return $nomakhir; // Mengembalikan ID Karyawan baru
+    }
 }
