@@ -34,42 +34,77 @@ class CoaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                TextInput::make('kepala_akun')
-                    ->label('Kepala Akun')
-                    ->required(),
-                
-                TextInput::make('kode_akun')
-                    ->label('Kode Akun')
-                    ->required(),
+{
+    return $form
+        ->schema([
+            Select::make('kepala_akun')
+                ->label('Kepala Akun')
+                ->options([
+                    '1' => '1',
+                    '2' => '2',
+                    '3' => '3',
+                    '4' => '4',
+                    '5' => '5',
+                ])
+                ->required(),
 
-                TextInput::make('nama_akun')
-                    ->label('Nama Akun')
-                    ->required(),
-            ]);
-    }
+            Select::make('kelompok_akun')
+                ->label('Kelompok Akun')
+                ->options([
+                    'aset' => 'Aset',
+                    'utang' => 'Utang',
+                    'modal' => 'Modal',
+                    'pendapatan' => 'Pendapatan',
+                    'beban' => 'Beban',
+                ])
+                ->required(),
+
+            TextInput::make('kode_akun')
+                ->label('Kode Akun')
+                ->required(),
+
+            TextInput::make('nama_akun')
+                ->label('Nama Akun')
+                ->required(),
+            
+            Select::make('posisi_akun')
+                ->label('Posisi Akun')
+                ->options([
+                    'debit' => 'Debit',
+                    'kredit' => 'Kredit',
+                ])
+        ]);
+}
 
     public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('kepala_akun')
+{
+    return $table
+        ->columns([
+            TextColumn::make('kepala_akun')
                 ->label('Kepala Akun')
-                ->searchable()
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
 
-                TextColumn::make('kode_akun')
+            TextColumn::make('kelompok_akun')
+                ->label('Kelompok Akun')
+                ->sortable()
+                ->searchable(),
+
+            TextColumn::make('kode_akun')
                 ->label('Kode Akun')
-                ->searchable()
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
 
-                TextColumn::make('nama_akun')
+            TextColumn::make('nama_akun')
                 ->label('Nama Akun')
-                ->searchable()
-                ->sortable(),
-            ])
+                ->sortable()
+                ->searchable(),
+            
+            TextColumn::make('posisi_akun')
+                ->label('Posisi Akun')
+                ->sortable()
+                ->searchable(),
+        ])
             ->filters([
                 //
             ])

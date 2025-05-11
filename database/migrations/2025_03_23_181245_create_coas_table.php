@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('coa', function (Blueprint $table) {
             $table->id();
+            $tabel->string('kelompok_akun');
             $table->string('kepala_akun');
             $table->string('kode_akun')->unique();
             $table->string('nama_akun');
+            $table->string('posisi_akun');
             $table->timestamps();
         });
     }
