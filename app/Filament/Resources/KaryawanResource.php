@@ -12,36 +12,58 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 
+// untuk form dan table
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Select;
+
+// untuk model ke user
+use App\Models\User;
 
 class KaryawanResource extends Resource
 {
     protected static ?string $model = Karyawan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-face-smile';
+    // merubah nama label menjadi Pembeli
+    protected static ?string $navigationLabel = 'Karyawan';
+
+    // tambahan buat grup masterdata
+    protected static ?string $navigationGroup = 'Masterdata';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Kolom untuk id_karyawan
+                //direlasikan ke tabel user
+                Select::make('user_id')
+                    ->label('User Id')
+                    ->relationship('user', 'email')
+                    ->searchable() // Menambahkan fitur pencarian
+                    ->preload() // Memuat opsi lebih awal untuk pengalaman yang lebih cepat
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            $user = User::find($state);
+                            $set('nama_karyawan', $user->name);
+                        }
+                    })
+                , 
+
                 TextInput::make('id_karyawan')
-                    ->label('Id Karyawan')
-                    ->default(fn () => Karyawan::getIdKaryawan()) 
+                    ->default(fn () => Karyawan::getKodeKaryawan()) // Ambil default dari method getKodePembeli
+                    ->label('id karyawan')
                     ->required()
-                    ->readonly(), 
-
-                // Kolom untuk nama_karyawan
+                    ->readonly() // Membuat field menjadi read-only
+                ,
                 TextInput::make('nama_karyawan')
-                    ->label('Nama Karyawan')
                     ->required()
-                    ->placeholder('Masukkan nama karyawan'),
-
-                // Kolom untuk jenis_kelamin
+                    ->placeholder('Masukkan nama Karyawan') // Placeholder untuk membantu pengguna
+                    // ->live()
+                    ->readonly() // Membuat field tidak bisa diketik manual
+                ,
                 Select::make('jenis_kelamin')
                     ->label('Jenis Kelamin')
                     ->options([
@@ -50,25 +72,17 @@ class KaryawanResource extends Resource
                     ])
                     ->required(),
 
-                // Kolom untuk alamat
-                Textarea::make('alamat')
-                    ->label('Alamat')
+                TextInput::make('alamat')
                     ->required()
-                    ->placeholder('Masukkan alamat lengkap'),
-
-                // Kolom untuk nomor_telepon
+                    ->placeholder('Masukkan alamat pembeli') // Placeholder untuk membantu pengguna
+                ,
                 TextInput::make('nomor_telepon')
-                    ->label('Nomor Telepon')
                     ->required()
-                    ->tel()
-                    ->placeholder('Masukkan nomor telepon'),
-
-                // Kolom untuk email
-                TextInput::make('email')
-                    ->label('Email')
-                    ->required()
-                    ->email()
-                    ->placeholder('Masukkan email karyawan'),
+                    ->placeholder('Masukkan nomor telepon') // Placeholder untuk membantu pengguna
+                    ->numeric() // Validasi agar hanya angka yang diizinkan
+                    ->prefix('+62') // Contoh: Menambahkan prefix jika diperlukan
+                    ->extraAttributes(['pattern' => '^[0-9]+$', 'title' => 'Masukkan angka yang diawali dengan 0']) // Validasi dengan pattern regex
+                ,
             ]);
     }
 
@@ -81,15 +95,12 @@ class KaryawanResource extends Resource
                 TextColumn::make('jenis_kelamin')->label('Jenis Kelamin'),
                 TextColumn::make('alamat')->label('Alamat'),
                 TextColumn::make('nomor_telepon')->label('Nomor Telepon'),
-                TextColumn::make('email')->label('Email'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
