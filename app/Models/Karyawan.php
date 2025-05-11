@@ -2,34 +2,45 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// tambahan
 use Illuminate\Support\Facades\DB;
+
 
 class Karyawan extends Model
 {
     use HasFactory;
 
-    protected $table = 'karyawans'; // Nama tabel eksplisit
+    protected $table = 'karyawan'; // Nama tabel eksplisit
 
-    protected $guarded = []; // Menjaga agar tidak ada atribut yang dibatasi untuk mass assignment
+    protected $guarded = []; //semua kolom boleh di isi
 
-    public static function getIdKaryawan()
+    public static function getKodeKaryawan()
     {
-        // Query untuk mendapatkan ID Karyawan terakhir
-        $sql = "SELECT IFNULL(MAX(id_karyawan), 'KA000') as id_karyawan FROM karyawans";
+        // query kode perusahaan
+        $sql = "SELECT IFNULL(MAX(id_karyawan), 'KAR-00000') as id_karyawan
+                FROM Karyawan ";
         $idkaryawan = DB::select($sql);
 
-        // Mengambil hasil ID Karyawan
-        foreach ($idkaryawan as $karyawan) {
-            $id = $karyawan->id_karyawan;
+        // cacah hasilnya
+        foreach ($idkaryawan as $kdkrywn) {
+            $kd = $kdkrywn->id_karyawan;
         }
+        // Mengambil substring tiga digit akhir dari string PR-000
+        $noawal = substr($kd,-5);
+        $noakhir = $noawal+1; //menambahkan 1, hasilnya adalah integer cth 1
+        $noakhir = 'KAR-'.str_pad($noakhir,5,"0",STR_PAD_LEFT); //menyambung dengan string P-00001
+        return $noakhir;
 
-        // Mengambil substring tiga digit terakhir dari ID (KA-000) dan menambahkan 1
-        $nomor1 = substr($id, -3); 
-        $nomor2 = $nomor1 + 1; // Menambah angka 1 untuk ID berikutnya
-        $nomakhir = 'KA' . str_pad($nomor2, 3, "0", STR_PAD_LEFT); // Menyusun ID Karyawan baru (KA-001)
+    }
 
-        return $nomakhir; // Mengembalikan ID Karyawan baru
+    // relasi ke tabel pembeli
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id'); 
+        // pastikan 'user_id' adalah nama kolom foreign key
     }
 }

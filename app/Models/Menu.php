@@ -45,7 +45,7 @@ class Menu extends Model
 
     public function kategori(): BelongsTo
     {
-        return $this->hasMany(Kategori::class, 'id_kategori', 'id_kategori');
+        return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
     }
 
 }
