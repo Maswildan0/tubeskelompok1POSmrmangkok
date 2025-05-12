@@ -85,10 +85,16 @@ class MenuResource extends Resource
                 ->required()
                 ,
 
-                Textarea::make('deskripsi')
-                ->label('Deskripsi')
-                ->maxLength(500)
-                ->required(),
+                TextInput::make('stok')
+                    ->required()
+                    ->placeholder('Masukkan stok barang') // Placeholder untuk membantu pengguna
+                    ->minValue(0)
+                ,
+                TextInput::make('rating')
+                    ->required()
+                    ->placeholder('Masukkan rating barang') // Placeholder untuk membantu pengguna
+                    ->minValue(0)
+                ,
             ]);
     }
 
@@ -118,9 +124,9 @@ class MenuResource extends Resource
                 ->label('Gambar')
                 ->size(50), 
 
-                TextColumn::make('deskripsi')
-                ->label('Deskripsi')
-                ->sortable(),
+                TextColumn::make('stok'),
+                
+                TextColumn::make('rating'),
 
             ])
             ->filters([
