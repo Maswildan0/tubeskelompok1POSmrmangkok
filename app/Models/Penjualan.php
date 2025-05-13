@@ -42,9 +42,9 @@ class Penjualan extends Model
     }
 
     // relasi ke tabel penjualan barang
-    public function penjualanBarang()
+    public function penjualanMenu()
     {
-        return $this->hasMany(PenjualanBarang::class, 'penjualan_id');
+        return $this->hasMany(PenjualanMenu::class, 'penjualan_id');
     }
 
 }

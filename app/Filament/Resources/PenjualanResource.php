@@ -76,7 +76,7 @@ class PenjualanMenuResource extends Resource
                                 ->schema([
                                     Select::make('menu_id')
                                         ->label('Menu')
-                                        ->options(Menu::pluck('nama_menu', 'id')->toArray())
+                                        ->options(Menu::pluck('nama', 'id')->toArray())
                                         ->required()
                                         ->reactive()
                                         ->placeholder('Pilih Menu')
