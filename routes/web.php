@@ -49,3 +49,7 @@ Route::model('karyawan', \App\Models\Karyawan::class);
 use App\Http\Controllers\PengirimanEmailController;
 Route::get('/proses_kirim_email_pembayaran', [PengirimanEmailController::class, 'proses_kirim_email_pembayaran']);
 
+// untuk contoh pdf
+use App\Http\Controllers\PDFController;
+Route::get('/contohpdf', [PDFController::class, 'contohpdf']);
+
