@@ -2,36 +2,65 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Daftar Penjualan</title>
+    <title>Laporan Absensi</title>
     <style>
-        body { font-family: sans-serif; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .text-right { text-align: right; } /* 👈 Tambahkan ini */
+        body {
+            font-family: sans-serif;
+            font-size: 12px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .text-right {
+            text-align: right;
+        }
     </style>
 </head>
 <body>
-    <h2>Daftar Absensi</h2>
+    <h2>Laporan Absensi Karyawan</h2>
+    <p>Tanggal Cetak: {{ \Carbon\Carbon::now()->translatedFormat('d F Y H:i') }}</p>
+
     <table>
         <thead>
             <tr>
-                <th>No Faktur</th>
-                <th>Nama Pembeli</th>
-                <th>Status</th>
-                <th>Tagihan</th>
-                <th>Tgl</th>
+                <th>No</th>
+                <th>ID Karyawan</th>
+                <th>Nama Karyawan</th>
+                <th>Tanggal</th>
+                <th>Jam Masuk</th>
+                <th>Jam Keluar</th>
+                <th>Total Jam</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($absensi as $p)
-            <tr>
-                <td>{{ $p->no_faktur }}</td>
-                <td>{{ optional($p->pembeli)->nama_pembeli }}</td>
-                <td>{{ $p->status }}</td>
-                <td class="text-right">{{ rupiah($p->tagihan) }}</td>
-                <td>{{ $p->created_at }}</td>
-            </tr>
+            @foreach ($absensi as $index => $item)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $item->karyawan->id_karyawan }}</td>
+                    <td>{{ $item->nama_karyawan }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}</td>
+                    <td>{{ $item->jam_masuk }}</td>
+                    <td>{{ $item->jam_keluar }}</td>
+                    <td class="text-right">{{ $item->total_jam_hari_ini }}</td>
+                </tr>
             @endforeach
         </tbody>
     </table>
