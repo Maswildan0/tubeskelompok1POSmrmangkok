@@ -13,8 +13,12 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\DatePicker;
-
+use Barryvdh\DomPDF\Facade\Pdf; // Kalau kamu pakai DomPDF
+use Illuminate\Support\Facades\Storage;
+use Filament\Tables\Actions\Action as TableAction;
 use App\Models\Karyawan;
+use App\Models\Absensi;
+
 
 class AbsensiResource extends Resource
 {
@@ -136,7 +140,27 @@ class AbsensiResource extends Resource
             \Filament\Tables\Actions\ViewAction::make(),
             \Filament\Tables\Actions\EditAction::make(),
             \Filament\Tables\Actions\DeleteAction::make(),
+            // tombol tambahan
         ])
+        ->headerActions([
+        // tombol tambahan export pdf
+        // ✅ Tombol Unduh PDF
+        TableAction::make('downloadPdf')
+        ->label('Unduh PDF')
+        ->icon('heroicon-o-document-arrow-down')
+        ->color('success')
+        ->action(function () {
+            $absensi = Absensi::all();
+
+            $pdf = Pdf::loadView('pdf.absensi', ['absensi' => $absensi]);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'karyawan-list.pdf'
+            );
+        })
+        ])
+        
         ->bulkActions([
             \Filament\Tables\Actions\BulkActionGroup::make([
                 \Filament\Tables\Actions\DeleteBulkAction::make(),
