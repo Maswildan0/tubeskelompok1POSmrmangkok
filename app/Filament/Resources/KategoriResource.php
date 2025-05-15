@@ -79,6 +79,7 @@ class KategoriResource extends Resource
                             'Minuman' => 'primary',
                             'Sambal' => 'danger',
                             'Topping' => 'info',
+                            default => 'success',
                         })
                 ,
                 TextColumn::make('menus_count')
