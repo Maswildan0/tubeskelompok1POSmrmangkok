@@ -52,7 +52,7 @@ class UserResource extends Resource
                         ->dehydrated(false),
                     Select::make('user_group')
                         ->options([
-                            'karyawan' => 'karyawan',
+                            'admin' => 'admin',
                             'customer' => 'customer',
                         ])
                         ->default('customer')
@@ -67,7 +67,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')->searchable(),
                 BadgeColumn::make('user_group')
                     ->color(fn ($state) => match ($state) {
-                        'karyawan' => 'warning',
+                        'admin' => 'warning',
                         'customer' => 'success',
                         default => 'success',
                     }),

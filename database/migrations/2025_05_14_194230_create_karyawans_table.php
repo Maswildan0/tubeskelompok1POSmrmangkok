@@ -19,8 +19,8 @@ return new class extends Migration
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);  // Kolom untuk Jenis Kelamin
             $table->string('alamat');  // Kolom untuk Alamat
             $table->string('nomor_telepon');  // Kolom untuk Nomor Telepon
-            $table->string('jabatan');  // Kolom untuk Nomor Telepon
-            $table->string('total_hari');  // Kolom untuk Nomor Telepon
+            $table->string('jabatan');
+            $table->integer('total_hari');
             $table->timestamps();  // Menambahkan created_at dan updated_at
         });
     }
