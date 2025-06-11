@@ -2,117 +2,120 @@
 
 namespace App\Filament\Resources;
 
-namespace App\Filament\Resources;
-
 use App\Filament\Resources\KaryawanResource\Pages;
+use App\Filament\Resources\KaryawanResource\RelationManagers;
 use App\Models\Karyawan;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+// untuk form dan table
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\FileUpload;
+
+// untuk model ke user
+use App\Models\User;
 
 class KaryawanResource extends Resource
 {
     protected static ?string $model = Karyawan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-face-smile';
+    // merubah nama label menjadi Pembeli
+    protected static ?string $navigationLabel = 'Karyawan';
 
-    /**
-     * Mendefinisikan form untuk membuat dan mengedit karyawan.
-     */
+    // tambahan buat grup masterdata
+    protected static ?string $navigationGroup = 'Masterdata';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id_karyawan')
-                    ->label('ID Karyawan')
-                    ->disabled()  // Membuat field ini tidak bisa diubah
-                    ->default(function () {
-                        return 'KAR' . str_pad(Karyawan::max('id_karyawan') + 1, 5, '0', STR_PAD_LEFT); // ID otomatis
-                    }),
-                Forms\Components\TextInput::make('nama_karyawan')
-                    ->label('Nama Karyawan')
+                //direlasikan ke tabel user
+                Select::make('user_id')
+                    ->label('User Id')
+                    ->relationship('user', 'email')
+                    ->searchable() // Menambahkan fitur pencarian
+                    ->preload() // Memuat opsi lebih awal untuk pengalaman yang lebih cepat
                     ->required()
-                    ->maxLength(255)
-                    ->placeholder('Masukkan Nama Karyawan'),  // Menambahkan placeholder
-                Forms\Components\Select::make('jenis_kelamin')
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            $user = User::find($state);
+                            $set('nama_karyawan', $user->name);
+                        }
+                    })
+                , 
+
+                TextInput::make('id_karyawan')
+                    ->default(fn () => Karyawan::getKodeKaryawan()) // Ambil default dari method getKodePembeli
+                    ->label('id karyawan')
+                    ->required()
+                    ->readonly() // Membuat field menjadi read-only
+                ,
+                TextInput::make('nama_karyawan')
+                    ->required()
+                    ->placeholder('Masukkan nama Karyawan') // Placeholder untuk membantu pengguna
+                    // ->live()
+                    ->readonly() // Membuat field tidak bisa diketik manual
+                ,
+                Select::make('jenis_kelamin')
                     ->label('Jenis Kelamin')
                     ->options([
                         'Laki-laki' => 'Laki-laki',
                         'Perempuan' => 'Perempuan',
                     ])
                     ->required(),
-                Forms\Components\TextArea::make('alamat')
-                    ->label('Alamat')
+
+                TextInput::make('alamat')
                     ->required()
-                    ->maxLength(500)
-                    ->placeholder('Masukkan Alamat'),  // Menambahkan placeholder
-                Forms\Components\TextInput::make('nomor_telepon')
-                    ->label('Nomor Telepon')
+                    ->placeholder('Masukkan alamat pembeli') // Placeholder untuk membantu pengguna
+                ,
+                TextInput::make('nomor_telepon')
                     ->required()
-                    ->maxLength(15)
-                    ->placeholder('Masukkan No Telepon'),  // Menambahkan placeholder
-                Forms\Components\TextInput::make('email')
-                    ->label('Email')
-                    ->required()
-                    ->email()
-                    ->unique(Karyawan::class, 'email')
-                    ->placeholder('Masukkan Email'),  // Menambahkan placeholder
+                    ->placeholder('Masukkan nomor telepon') // Placeholder untuk membantu pengguna
+                    ->numeric() // Validasi agar hanya angka yang diizinkan
+                    ->prefix('+62') // Contoh: Menambahkan prefix jika diperlukan
+                    ->extraAttributes(['pattern' => '^[0-9]+$', 'title' => 'Masukkan angka yang diawali dengan 0']) // Validasi dengan pattern regex
+                ,
             ]);
     }
 
-    /**
-     * Mendefinisikan tabel untuk menampilkan daftar karyawan.
-     */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id_karyawan')->label('ID Karyawan'),
-                Tables\Columns\TextColumn::make('nama_karyawan')->label('Nama Karyawan'),
-                Tables\Columns\TextColumn::make('jenis_kelamin')->label('Jenis Kelamin'),
-                Tables\Columns\TextColumn::make('email')->label('Email'),
-                Tables\Columns\TextColumn::make('nomor_telepon')->label('Nomor Telepon'),
+                TextColumn::make('id_karyawan')->label('ID Karyawan'),
+                TextColumn::make('nama_karyawan')->label('Nama Karyawan'),
+                TextColumn::make('jenis_kelamin')->label('Jenis Kelamin'),
+                TextColumn::make('alamat')->label('Alamat'),
+                TextColumn::make('nomor_telepon')->label('Nomor Telepon'),
+            ])
+            ->filters([
+                //
             ])
             ->actions([
-                EditAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                BulkAction::make('delete')  // Definisikan bulk action untuk delete
-                    ->label('Hapus')  // Label untuk action
-                    ->action(function ($records) {
-                        // Periksa apakah record valid dan bukan null sebelum dihapus
-                        foreach ($records as $record) {
-                            if ($record instanceof Karyawan) {
-                                $record->delete();  // Hapus record jika valid
-                            }
-                        }
-                    })
-                    ->requiresConfirmation(),  // Menambahkan konfirmasi
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
-    /**
-     * Mendefinisikan relasi yang terkait dengan resource ini.
-     */
     public static function getRelations(): array
     {
         return [
-            // Tambahkan relasi jika ada
+            //
         ];
     }
 
-    /**
-     * Mendefinisikan halaman-halaman terkait dengan resource ini.
-     */
     public static function getPages(): array
     {
         return [

@@ -48,4 +48,10 @@ class Menu extends Model
         return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
     }
 
+    public function penjualanMenu()
+    {
+        return $this->hasMany(PenjualanMenu::class, 'menu_id');
+    }
 }
+
+
