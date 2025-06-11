@@ -263,8 +263,7 @@
                         <div class="content-wrapper col-md-7">
                           <div class="categories my-3">100% Lezat & Bergizi</div>
                           <h3 class="display-4">Rice Bowl Spesial untuk Hari yang Sibuk</h3>
-                          <p>Nikmati kombinasi nasi hangat, lauk lezat, dan sayuran segar dalam satu mangkuk praktis.
-                          Cocok untuk makan siang cepat atau makan malam yang memuaskan.</p>
+                          <p>{{deskripsimakanan()}}</p>
                           <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 px-4 py-3 mt-3">PESAN SEKARANG</a>
                         </div>
                         <div class="img-wrapper col-md-5">
@@ -278,8 +277,7 @@
                         <div class="content-wrapper col-md-7">
                           <div class="categories mb-3 pb-3">100% Menyegarkan</div>
                           <h3 class="banner-title">Es Teh Manis Segar untuk Hari Cerah</h3>
-                          <p>Nikmati kesegaran teh pilihan dengan sentuhan manis yang pas.
-                          Cocok diminum kapan saja, di mana saja!</p>
+                          <p>{{deskripsiminuman()}}</p>
                           <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">PESAN SEKARANG</a>
                         </div>
                         <div class="img-wrapper col-md-5">
@@ -293,8 +291,7 @@
                         <div class="content-wrapper col-md-7">
                           <div class="categories mb-3 pb-3">100% Pedas Alami</div>
                           <h3 class="banner-title">Sambal Pilihan – Nikmat Tiada Tara</h3>
-                          <p>Dibuat dari cabai segar pilihan, menghadirkan sensasi pedas yang bikin nagih.
-                          Pas untuk semua hidangan favoritmu!</p>
+                          <p>{{deskripsisambal()}}</p>
                           <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">PESAN SEKARANG</a>
                         </div>
                         <div class="img-wrapper col-md-5">
@@ -364,7 +361,20 @@
         </div>
       </div>
     </section>
-
+    <section class="py-3 my-3">
+        <div class="container-fluid">
+            <div class="bg-warning py-3 rounded-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <h5 class="mb-3">Rekomendasi Hari Ini</h5>
+                            {{ rekomendasi() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="py-5 overflow-hidden">
       <div class="container-fluid">

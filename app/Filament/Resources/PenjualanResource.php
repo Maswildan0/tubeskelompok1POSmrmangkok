@@ -30,11 +30,13 @@ use App\Models\Pembeli;
 use App\Models\Menu;
 use App\Models\Pembayaran;
 use App\Models\PenjualanMenu;
+use Filament\Forms\Get;
+
 
 // DB
 use Illuminate\Support\Facades\DB;
 
-class PenjualanMenuResource extends Resource
+class PenjualanResource extends Resource
 {
     protected static ?string $model = Penjualan::class;
 
@@ -72,7 +74,7 @@ class PenjualanMenuResource extends Resource
                     Wizard\Step::make('Pilih Menu')
                         ->schema([
                             Repeater::make('items')
-                                ->relationship('penjualanMenu')
+                                ->relationship('penjualanmenu')
                                 ->schema([
                                     Select::make('menu_id')
                                         ->label('Menu')
@@ -113,6 +115,56 @@ class PenjualanMenuResource extends Resource
                                 ->createItemButtonLabel('Tambah Menu')
                                 ->minItems(1)
                                 ->required(),
+
+                                Forms\Components\Actions::make([
+                                    Forms\Components\Actions\Action::make('Simpan Sementara')
+                                        ->action(function ($get) {
+                                            $penjualan = Penjualan::updateOrCreate(
+                                                ['no_faktur' => $get('no_faktur')],
+                                                [
+                                                    'tgl' => $get('tgl'),
+                                                    'pembeli_id' => $get('pembeli_id'),
+                                                    'status' => 'pesan',
+                                                    'tagihan' => 0
+                                                ]
+                                            );
+    
+                                            // Simpan data barang
+                                            foreach ($get('items') as $item) {
+                                                PenjualanMenu::updateOrCreate(
+                                                    [
+                                                        'penjualan_id' => $penjualan->id,
+                                                        'menu_id' => $item['menu_id']
+                                                    ],
+                                                    [
+                                                        'harga_beli' => $item['harga_beli'],
+                                                        'harga_jual' => $item['harga_jual'],
+                                                        'jml' => $item['jml'],
+                                                        'tgl' => $item['tgl'],
+                                                    ]
+                                                );
+    
+                                                // Kurangi stok barang di tabel barang
+                                                $menu = Menu::find($item['menu_id']);
+                                                if ($menu) {
+                                                    $menu->decrement('stok', $item['jml']); // Kurangi stok sesuai jumlah barang yang dibeli
+                                                }
+                                            }
+    
+                                            // Hitung total tagihan
+                                            $totalTagihan = PenjualanMenu::where('penjualan_id', $penjualan->id)
+                                                ->sum(DB::raw('harga_jual * jml'));
+    
+                                            // Update tagihan di tabel penjualan2
+                                            $penjualan->update(['tagihan' => $totalTagihan]);
+                                                                        })
+                                            
+                                            ->label('Proses')
+                                            ->color('primary'),
+                                                                
+                                        ])    
+           
+                            // 
                         ]),
                     Wizard\Step::make('Pembayaran')
                         ->schema([
