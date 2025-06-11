@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\DB;
+
 class Pembayaran extends Model
 {
     use HasFactory;
@@ -12,4 +14,4 @@ class Pembayaran extends Model
     protected $table = 'pembayaran'; // Nama tabel eksplisit
 
     protected $guarded = [];
-}
+
