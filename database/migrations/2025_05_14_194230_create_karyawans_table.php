@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('alamat');  // Kolom untuk Alamat
             $table->string('nomor_telepon');  // Kolom untuk Nomor Telepon
             $table->string('jabatan');
-            $table->integer('total_hari');
+            $table->decimal('upah_per_jam', 10, 2)->default(0);
             $table->timestamps();  // Menambahkan created_at dan updated_at
         });
     }

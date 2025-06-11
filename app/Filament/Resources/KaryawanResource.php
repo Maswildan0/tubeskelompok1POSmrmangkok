@@ -72,6 +72,11 @@ class KaryawanResource extends Resource
                     ])
                     ->required(),
 
+                TextInput::make('jabatan')
+                    ->label('Jabatan')
+                    ->required()
+                    ->placeholder('Masukkan jabatan karyawan'),
+
                 TextInput::make('alamat')
                     ->required()
                     ->placeholder('Masukkan alamat pembeli') // Placeholder untuk membantu pengguna
@@ -83,6 +88,12 @@ class KaryawanResource extends Resource
                     ->prefix('+62') // Contoh: Menambahkan prefix jika diperlukan
                     ->extraAttributes(['pattern' => '^[0-9]+$', 'title' => 'Masukkan angka yang diawali dengan 0']) // Validasi dengan pattern regex
                 ,
+                TextInput::make('upah_per_jam')
+                    ->required()
+                    ->label('Upah per Jam')
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->placeholder('Contoh: 15000'),
             ]);
     }
 
@@ -93,8 +104,13 @@ class KaryawanResource extends Resource
                 TextColumn::make('id_karyawan')->label('ID Karyawan'),
                 TextColumn::make('nama_karyawan')->label('Nama Karyawan'),
                 TextColumn::make('jenis_kelamin')->label('Jenis Kelamin'),
+                TextColumn::make('jabatan')->label('Jabatan'),
                 TextColumn::make('alamat')->label('Alamat'),
                 TextColumn::make('nomor_telepon')->label('Nomor Telepon'),
+                TextColumn::make('upah_per_jam')
+                    ->label('Upah per Jam')
+                    ->formatStateUsing(fn ($state) => rupiah($state)),
+
             ])
             ->filters([
                 //

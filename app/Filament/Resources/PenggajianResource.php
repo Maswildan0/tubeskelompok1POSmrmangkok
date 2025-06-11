@@ -12,29 +12,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Radio;
-
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\IconColumn;
-
 use App\Models\Karyawan;
+use App\Models\Absensi;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Forms\Components\TextInput;
 
-// tambahan untuk tombol unduh pdf
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\Action as TableAction; // alias agar jelas
-use Barryvdh\DomPDF\Facade\Pdf; // Kalau kamu pakai DomPDF
-use Illuminate\Support\Facades\Storage;
 
 
 class PenggajianResource extends Resource
@@ -42,120 +25,151 @@ class PenggajianResource extends Resource
     protected static ?string $model = Penggajian::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Transaksi';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('id_gaji')
-                    ->default(fn () => Penggajian::getIdGaji()) // Ambil default dari method getKodeBarang
-                    ->label('ID Gaji')
-                    ->required()
-                    ->readonly() // Membuat field menjadi read-only
-                ,
-
-                Select::make('id_karyawan')
-                    ->label('ID_Karyawan')
-                    ->options(fn () => Karyawan::pluck('id_karyawan', 'id_karyawan')) // Ambil data pelanggan
-                    ->searchable() // Bisa dicari
-                    ->preload() // Load semua data untuk performa lebih baik
-                    ->required()
-                    ->live()
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        if ($state) {
-                            $karyawan = Karyawan::where('id_karyawan', $state)->first();
-                            $set('nama_karyawan', $karyawan?->nama_karyawan); // pakai optional chaining untuk aman
-                        }
-                    })
-                ,
-                                
+                Forms\Components\Select::make('karyawan_id')
+                ->label('Karyawan')
+                ->relationship('karyawan', 'id_karyawan') //buat nyambung id karyawan
+                ->searchable() 
+                ->preload() // Memuat opsi lebih awal untuk pengalaman yang lebih cepat
+                ->required()
+                ->live()
+                ->afterStateUpdated(function ($state, callable $set) {
+                    if ($state) {
+                        // Mencari data karyawan berdasarkan id_karyawan yang dipilih
+                        $karyawan = Karyawan::find($state);
+                        // Mengisi nama_karyawan setelah id_karyawan dipilih
+                        $set('upah_per_jam', $karyawan->upah_per_jam);
+                    }
+                })
+                ->afterStateUpdated(function ($state, callable $set) {
+                    if ($state) {
+                        // Mencari data karyawan berdasarkan id_karyawan yang dipilih
+                        $karyawan = Karyawan::find($state);
+                        // Mengisi nama_karyawan setelah id_karyawan dipilih
+                        $set('nama_karyawan', $karyawan->nama_karyawan);
+                    }
+                }),
+                
                 TextInput::make('nama_karyawan')
-                    ->label('Nama Karyawan')
-                    ->required()
-                    ->placeholder('Masukkan Nama Karyawan')
-                    ->readonly()
-                ,
+                ->label('Nama Karyawan')
+                ->required()
+                ->placeholder('Nama karyawan akan terisi otomatis') 
+                ->readonly() 
+                ->reactive(), 
+            
+            
+                Forms\Components\DatePicker::make('periode_mulai')
+                ->label('Periode Mulai')
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(fn ($set, $get) => PenggajianResource::updatePerhitungan($get, $set)),
+    
+            Forms\Components\DatePicker::make('periode_selesai')
+                ->label('Periode Selesai')
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(fn ($set, $get) => PenggajianResource::updatePerhitungan($get, $set)),
+    
 
-                TextInput::make('jabatan')
-                    ->label('Jabatan')
-                    ->required()
-                    ->placeholder('Masukkan Jabatan')
-                ,
+            Forms\Components\TextInput::make('total_jam')
+                ->numeric()
+                ->required()
+                ->disabled()
+                ->dehydrated(),
 
-                TextInput::make('total_jam_kerja')
-                    ->label('Total Jam Kerja')
-                    ->numeric()
-                    ->live()
-                    ->required()
-                    ->placeholder('Masukkan Total Jam Kerja')
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        $set('gaji', $state * 100000);
-                    })
-                , 
+            Forms\Components\TextInput::make('upah_per_jam')
+                ->label('upah per jam')
+                ->required()
+                ->readonly() 
+                ->reactive(), 
 
-                TextInput::make('gaji')
-                    ->label('Gaji')
-                    ->required()
-                    ->placeholder('Masukkan Nominal Gaji')
-                    ->readonly()
-                , 
+            Forms\Components\TextInput::make('total_gaji')
+                ->numeric()
+                ->required(),
 
-                // FileUpload::make('slip_gaji')
-                //     ->label('Slip Gaji')
-                //     ->directory('documents')
-                //     ->columnSpan(2)
-                //     ->required(),
+            Forms\Components\DatePicker::make('tanggal_pembayaran')
+                ->label('Tanggal Pembayaran')
+                ->nullable(),
 
+            Forms\Components\Select::make('status')
+                ->options([
+                    'belum dibayar' => 'Belum Dibayar',
+                    'sudah dibayar' => 'Sudah Dibayar',
+                ])
+                ->required(),
             ]);
+            
     }
+    protected static function updatePerhitungan(Get $get, Set $set)
+    {
+        $karyawanId = $get('karyawan_id');
+        $mulai = $get('periode_mulai');
+        $selesai = $get('periode_selesai');
+        $upah = $get('upah_per_jam') ?? 0;
+
+        if ($karyawanId && $mulai && $selesai) {
+            $totalJam = Absensi::where('id_karyawan', $karyawanId)
+                ->whereBetween('tanggal', [$mulai, $selesai])
+                ->sum('total_jam_hari_ini');
+
+            $set('total_jam', $totalJam);
+            $set('total_gaji', $totalJam * $upah);
+        } else {
+            $set('total_jam', 0);
+            $set('total_gaji', 0);
+        }
+    }
+
+
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('id_gaji')
-                    -> label('ID Gaji'),
-                TextColumn::make('id_karyawan')
-                    -> label('ID Karyawan'),
+                Tables\Columns\TextColumn::make('karyawan.nama_karyawan')
+                    ->label('Nama Karyawan')
+                    ->searchable(),
 
-                TextColumn::make('nama_karyawan'),
-                TextColumn::make('jabatan'),
-                TextColumn::make('total_jam_kerja'),
-                TextColumn::make('gaji'),
+                Tables\Columns\TextColumn::make('periode_mulai')
+                    ->label('Periode Mulai')
+                    ->date(),
 
-                // TextColumn::make('dokumen')
-                // ->label('Dokumen')
-                // ->url(fn($record) => asset('storage/' . $record->file_path), true)
-                // ->formatStateUsing(fn($state) => $state 
-                //     ? '<a href="' . asset('storage/' . $state) . '" target="_blank"><i class="fas fa-file-pdf"></i> 📄 </a>' 
-                //     : 'Tidak Ada File')
-                // ->html(), // Pastikan menggunakan html() agar bisa merender HTML
-                // // Buka file saat diklik
+                Tables\Columns\TextColumn::make('periode_selesai')
+                    ->label('Periode Selesai')
+                    ->date(),
 
-                
+                Tables\Columns\TextColumn::make('total_jam')
+                    ->label('Total Jam')
+                    ->suffix(' jam'),
+
+                Tables\Columns\TextColumn::make('upah_per_jam')
+                    ->label('Upah per Jam')
+                    ->formatStateUsing(fn ($state) => rupiah($state)),
+
+                Tables\Columns\TextColumn::make('total_gaji')
+                    ->label('Total Gaji')
+                    ->formatStateUsing(fn ($state) => rupiah($state)),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn ($state) => $state === 'dibayar' ? 'success' : 'warning'),
             ])
+
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                ->options([
+                    'belum dibayar' => 'Belum Dibayar',
+                    'dibayar' => 'Dibayar',
+                ]),
             ])
             ->actions([
-                Action::make('downloadPdf')
-                    ->label('Unduh PDF')
-                    ->icon('heroicon-o-document-arrow-down')
-                    ->color('success')
-                    ->action(function (Penggajian $record) {
-                        $pdf = Pdf::loadView('pdf.penggajian', [
-                            'penggajian' => $record, // <<< singular
-                        ]);
-
-                        return response()->streamDownload(
-                            fn () => print($pdf->output()),
-                            'slip-gaji-'.$record->id_gaji.'.pdf'
-                        );
-                    }),
-
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
