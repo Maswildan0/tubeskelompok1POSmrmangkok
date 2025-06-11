@@ -11,7 +11,7 @@ Route::get('/hi', function () {
 });
 
 Route::get('/hello', function () {
-    echo'haloo';
+    dd(rupiah(15000));
 });
 
 Route::get('/ayam', function () {
@@ -57,6 +57,15 @@ Route::get('/angsa', function () {
     echo'welcome';
 });
 
+Route::get('/test-view', function () {
+    return view('filament.components.pembelianbahanbaku-table.blade', [
+        'pembayaran' => App\Models\PembelianBahanBaku::all()
+    ]);
+});
+// routes/web.php
+Route::get('/test-view', function () {
+    return view('filament.components.pembelianbahanbaku-table');
+});
 
 Route::model('karyawan', \App\Models\Karyawan::class);
 
