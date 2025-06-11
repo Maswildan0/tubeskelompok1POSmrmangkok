@@ -43,4 +43,40 @@ class Karyawan extends Model
         return $this->belongsTo(User::class, 'user_id'); 
         // pastikan 'user_id' adalah nama kolom foreign key
     }
+     // Menambahkan relasi untuk menghitung total jam kerja berdasarkan absensi
+    public function absensi() 
+    {
+        return $this->hasMany(Absensi::class, 'id_karyawan');
+    }
+
+    // Fungsi untuk memperbarui total jam kerja keseluruhan
+    public function updateTotalJamKerja()
+{
+    $total = $this->absensi()->sum(DB::raw('TIMESTAMPDIFF(HOUR, jam_masuk, jam_keluar)'));
+    $this->update(['total_jam_kerja' => $total]);
+}
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($karyawan) {
+            // Generate id_karyawan jika belum ada
+            if (empty($karyawan->id_karyawan)) {
+                $karyawan->id_karyawan = 'KA' . str_pad(Karyawan::count() + 1, 3, '0', STR_PAD_LEFT);
+            }
+        });
+    }
+
+    // Menghitung total jam kerja berdasarkan absensi
+    public function getTotalJamKerjaAttribute()
+{
+    return $this->absensi()->get()->map(function ($absen) {
+        // Pastikan jam_masuk dan jam_keluar diubah ke objek Carbon dan dihitung dalam jam
+        $masuk = \Carbon\Carbon::parse($absen->jam_masuk);
+        $keluar = \Carbon\Carbon::parse($absen->jam_keluar);
+        return $masuk->diffInHours($keluar);
+    })->sum(); // Setelah itu lakukan sum pada hasilnya
+}
 }
