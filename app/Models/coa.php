@@ -11,4 +11,9 @@ class coa extends Model
     protected $table = 'coa'; // Nama tabel eksplisit
 
     protected $guarded = [];
+
+    public function JurnalDetail()
+    {
+        return $this->hasMany(JurnalDetail::class);
+    }
 }
