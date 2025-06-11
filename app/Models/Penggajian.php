@@ -30,4 +30,10 @@ class Penggajian extends Model
         return $noakhir;
 
     }
+
+    public function karyawan()
+{
+    return $this->belongsTo(Karyawan::class);
+}
+
 }

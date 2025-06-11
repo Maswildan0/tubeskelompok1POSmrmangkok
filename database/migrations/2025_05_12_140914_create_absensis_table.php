@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('absensi', function (Blueprint $table) {
             $table->id(); 
-            $table->foreignId('id_karyawan') 
-                ->constrained('karyawan') 
-                ->onDelete('cascade'); // Jika data karyawan dihapus, data absensi juga ikut dihapus
+            $table->foreignId('id_karyawan')->constrained('karyawan')->onDelete('cascade'); // Jika data karyawan dihapus, data absensi juga ikut dihapus
             $table->string('nama_karyawan');
             $table->date('tanggal');
             $table->time('jam_masuk'); 

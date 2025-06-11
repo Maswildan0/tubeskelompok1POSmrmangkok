@@ -44,17 +44,16 @@ class Karyawan extends Model
         // pastikan 'user_id' adalah nama kolom foreign key
     }
      // Menambahkan relasi untuk menghitung total jam kerja berdasarkan absensi
-    public function absensi() 
-    {
-        return $this->hasMany(Absensi::class, 'id_karyawan');
-    }
-
-    // Fungsi untuk memperbarui total jam kerja keseluruhan
-    public function updateTotalJamKerja()
-{
-    $total = $this->absensi()->sum(DB::raw('TIMESTAMPDIFF(HOUR, jam_masuk, jam_keluar)'));
-    $this->update(['total_jam_kerja' => $total]);
-}
+     public function penggajians()
+     {
+         return $this->hasMany(Penggajian::class, 'id_karyawan');
+     }
+     
+     public function absensis()
+     {
+         return $this->hasMany(Absensi::class, 'id_karyawan');
+     }
+     
 
 
     public static function boot()
