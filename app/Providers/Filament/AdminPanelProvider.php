@@ -52,8 +52,8 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
                 \App\Filament\Widgets\DashboardStatCards::class,
-                // \App\Filament\Widgets\TotalPenjualanChart::class,
-                // \App\Filament\Widgets\PenjualanPerBulanChart::class,
+                \App\Filament\Widgets\TotalPenjualanChart::class,
+                \App\Filament\Widgets\PenjualanPerBulanChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

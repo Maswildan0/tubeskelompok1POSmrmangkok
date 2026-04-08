@@ -15,3 +15,4 @@ class Pembayaran extends Model
 
     protected $guarded = [];
 
+}

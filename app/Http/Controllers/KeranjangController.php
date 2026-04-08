@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth; //agar bisa mengakses session user_id dari 
 
 class KeranjangController extends Controller
 {
-    
+
     public function daftarmenu()
     {
         $id_user = Auth::user()->id;
@@ -86,7 +86,6 @@ class KeranjangController extends Controller
                                       });
                             })
                             ->get();
-                        
 
         $t = DB::table('penjualan')
         ->join('penjualanmenu', 'penjualan.id', '=', 'penjualanmenu.penjualan_id')

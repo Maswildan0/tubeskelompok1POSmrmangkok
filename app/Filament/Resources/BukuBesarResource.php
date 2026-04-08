@@ -27,7 +27,8 @@ use Filament\Forms\Components\Section;
 
 class BukuBesarResource extends Resource
 {
-    // protected static ?string $model = BukuBesar::class;
+    protected static ?string $model = BukuBesar::class;
+
     protected static string $view = 'filament.resources.buku-besar-resource.pages.index'; // Tentukan view kustom
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';

@@ -50,7 +50,7 @@ class UserResource extends Resource
                         ->minLength(8)
                         ->minlength(8)
                         ->dehydrated(false),
-                    Select::make('user_group')
+                    Select::make('user_asasasa')
                         ->options([
                             'admin' => 'admin',
                             'customer' => 'customer',

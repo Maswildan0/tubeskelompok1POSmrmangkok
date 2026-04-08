@@ -22,7 +22,7 @@ class TotalPenjualanChart extends ChartWidget
             ->get()
             ->map(function ($penjualan) {
                 return [
-                    'nama' => $penjualan->nama_barang,
+                    'nama' => $penjualan->nama,
                     'total_penjualan' => $penjualan->total_penjualan,
                 ];
             });

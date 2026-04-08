@@ -1,4 +1,3 @@
-Coba AI secara langsung di aplikasi favorit Anda … Gunakan Gemini untuk membuat draf dan menyempurnakan konten, serta dapatkan Gemini Pro dengan akses ke AI generasi berikutnya dari Google seharga Rp 309.000,00 Rp 0 selama 1 bulan
 <x-filament-widgets::widget>
     <x-filament::section>
         
